@@ -119,6 +119,10 @@ public class Window {
         return mHeight;
     }
 
+    public long getWindowHandle() {
+        return mWindowHandle;
+    }
+
     public boolean isResized() {
         return mResized;
     }
