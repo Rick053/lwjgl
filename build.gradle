@@ -58,4 +58,5 @@ dependencies {
     runtime "org.lwjgl:lwjgl-tinyfd:${lwjglVersion}:${lwjglNatives}"
 
     compile "org.joml:joml:${jomlVersion}"
+    compile group: 'org.l33tlabs.twl', name: 'pngdecoder', version: '1.0'
 }
