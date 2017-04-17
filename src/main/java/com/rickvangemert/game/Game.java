@@ -1,9 +1,6 @@
 package com.rickvangemert.game;
 
-import com.rickvangemert.engine.GameLogic;
-import com.rickvangemert.engine.Item;
-import com.rickvangemert.engine.MouseInput;
-import com.rickvangemert.engine.Window;
+import com.rickvangemert.engine.*;
 import com.rickvangemert.engine.graph.*;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -24,18 +21,14 @@ public class Game implements GameLogic {
 
     private Item[] gameItems;
 
-    private Vector3f ambientLight;
-
-    private PointLight[] pointLights;
-
-    private SpotLight[] spotLights;
-
-    private DirectionalLight directionalLight;
+    private SceneLight sceneLight;
 
     private float lightAngle;
 
     private float spotAngle = 0;
     private float spotInc = 1;
+
+    private Hud hud;
 
     public Game() {
         renderer = new Renderer();
@@ -60,7 +53,9 @@ public class Game implements GameLogic {
         gameItem.setPosition(0, 0, -2);
         gameItems = new Item[]{gameItem};
 
-        ambientLight = new Vector3f(0.3f, 0.3f, 0.3f);
+        sceneLight = new SceneLight();
+
+        sceneLight.setAmbientLight(new Vector3f(0.3f, 0.3f, 0.3f));
 
         //Point light
         Vector3f lightColour = new Vector3f(1, 1, 1);
@@ -69,7 +64,7 @@ public class Game implements GameLogic {
         PointLight pointLight = new PointLight(lightColour, lightPosition, lightIntensity);
         PointLight.Attenuation att = new PointLight.Attenuation(0.0f, 0.0f, 1.0f);
         pointLight.setAttenuation(att);
-        pointLights = new PointLight[]{pointLight};
+        sceneLight.setPointLightList(new PointLight[]{pointLight});
 
         //Spot light
         lightPosition = new Vector3f(0, 0.0f, 10f);
@@ -79,10 +74,12 @@ public class Game implements GameLogic {
         Vector3f coneDir = new Vector3f(0, 0, -1);
         float cutoff = (float) Math.cos(Math.toRadians(140));
         SpotLight spotLight = new SpotLight(pointLight, coneDir, cutoff);
-        spotLights = new SpotLight[]{spotLight, new SpotLight(spotLight)};
+        sceneLight.setSpotLightList(new SpotLight[]{spotLight, new SpotLight(spotLight)});
 
         lightPosition = new Vector3f(-1, 0, 0);
-        directionalLight = new DirectionalLight(lightColour, lightPosition, lightIntensity);
+        sceneLight.setDirectionalLight(new DirectionalLight(lightColour, lightPosition, lightIntensity));
+
+        hud = new Hud("DEMO");
     }
 
     @Override
@@ -103,12 +100,12 @@ public class Game implements GameLogic {
         } else if (window.isKeyPressed(GLFW_KEY_X)) {
             cameraInc.y = 1;
         }
-
+        SpotLight[] spotLights = sceneLight.getSpotLightList();
         float lightPos = spotLights[0].getPointLight().getPosition().z;
         if (window.isKeyPressed(GLFW_KEY_N)) {
-            this.spotLights[0].getPointLight().getPosition().z = lightPos + 0.1f;
+            spotLights[0].getPointLight().getPosition().z = lightPos + 0.1f;
         } else if (window.isKeyPressed(GLFW_KEY_M)) {
-            this.spotLights[0].getPointLight().getPosition().z = lightPos - 0.1f;
+            spotLights[0].getPointLight().getPosition().z = lightPos - 0.1f;
         }
     }
 
@@ -131,17 +128,20 @@ public class Game implements GameLogic {
             spotInc = 1;
         }
         double spotAngleRad = Math.toRadians(spotAngle);
+        SpotLight[] spotLights = sceneLight.getSpotLightList();
         Vector3f coneDir = spotLights[0].getConeDirection();
         coneDir.y = (float) Math.sin(spotAngleRad);
 
-        lightAngle += 0.8f;
+        // Update directional light direction, intensity and colour
+        DirectionalLight directionalLight = sceneLight.getDirectionalLight();
+        lightAngle += 1.1f;
         if (lightAngle > 90) {
             directionalLight.setIntensity(0);
-            if (lightAngle >= 180) {
+            if (lightAngle >= 360) {
                 lightAngle = -90;
             }
         } else if (lightAngle <= -80 || lightAngle >= 80) {
-            float factor = 1 - (float)(Math.abs(lightAngle) - 80) / 10f;
+            float factor = 1 - (float) (Math.abs(lightAngle) - 80) / 10.0f;
             directionalLight.setIntensity(factor);
             directionalLight.getColor().y = Math.max(factor, 0.9f);
             directionalLight.getColor().z = Math.max(factor, 0.5f);
@@ -151,7 +151,6 @@ public class Game implements GameLogic {
             directionalLight.getColor().y = 1;
             directionalLight.getColor().z = 1;
         }
-
         double angRad = Math.toRadians(lightAngle);
         directionalLight.getDirection().x = (float) Math.sin(angRad);
         directionalLight.getDirection().y = (float) Math.cos(angRad);
@@ -159,7 +158,8 @@ public class Game implements GameLogic {
 
     @Override
     public void render(Window window) {
-        renderer.render(window, camera, gameItems, ambientLight, pointLights, spotLights, directionalLight);
+        hud.updateSize(window);
+        renderer.render(window, camera, gameItems, sceneLight, hud);
     }
 
     @Override

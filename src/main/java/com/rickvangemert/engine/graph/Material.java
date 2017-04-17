@@ -23,6 +23,11 @@ public class Material {
         this.reflectance = reflectance;
     }
 
+    public Material(Texture texture) {
+        this();
+        this.texture = texture;
+    }
+
     public Material(Texture texture, float reflectance) {
         this();
         this.texture = texture;
