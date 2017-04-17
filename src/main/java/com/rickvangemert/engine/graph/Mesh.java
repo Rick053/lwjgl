@@ -25,9 +25,7 @@ public class Mesh {
 
     private final int mVertexCount;
 
-    private Texture mTexture;
-
-    private Vector3f mColour;
+    private Material mMaterial;
 
     public Mesh(float[] positions, float[] textCoords, float[] normals, int[] indices) {
         FloatBuffer posBuffer = null;
@@ -36,7 +34,6 @@ public class Mesh {
         IntBuffer indicesBuffer = null;
 
         try {
-            mColour = DEFAULT_COLOUR;
             mVertexCount = indices.length;
             mVboIdList = new ArrayList<>();
 
@@ -102,28 +99,21 @@ public class Mesh {
         return mVertexCount;
     }
 
-    public boolean isTextured() {
-        return (mTexture != null);
+    public void setMaterial(Material material) {
+        mMaterial = material;
     }
 
-    public void setTexture(Texture texture) {
-        mTexture = texture;
-    }
-
-    public Vector3f getColour() {
-        return mColour;
-    }
-
-    public void setColour(Vector3f colour) {
-        mColour = colour;
+    public Material getMaterial() {
+        return mMaterial;
     }
 
     public void render() {
-        if (mTexture != null) {
+        Texture texture = mMaterial.getTexture();
+        if (texture != null) {
             // Activate firs texture bank
             glActiveTexture(GL_TEXTURE0);
             // Bind the texture
-            glBindTexture(GL_TEXTURE_2D, mTexture.getId());
+            glBindTexture(GL_TEXTURE_2D, texture.getId());
         }
 
         // Draw the mesh
@@ -151,8 +141,9 @@ public class Mesh {
             glDeleteBuffers(vboId);
         }
 
-        if (mTexture != null) {
-            mTexture.cleanup();
+        Texture texture = mMaterial.getTexture();
+        if (texture != null) {
+            texture.cleanup();
         }
 
         // Delete the VAO
