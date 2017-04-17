@@ -6,6 +6,7 @@ import engine.MouseInput;
 import engine.Window;
 import engine.graph.Camera;
 import engine.graph.Mesh;
+import engine.graph.OBJLoader;
 import engine.graph.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -130,22 +131,14 @@ public class Game implements GameLogic {
                 16, 18, 19, 17, 16, 19,
                 // Back face
                 4, 6, 7, 5, 4, 7,};
-        Texture texture = new Texture("/textures/grassblock.png");
-        Mesh mesh = new Mesh(positions, textCoords, indices, texture);
 
-        Item gameItem1 = new Item(mesh);
-        gameItem1.setScale(0.5f);
-        gameItem1.setPosition(0, 0, -2);
-        Item gameItem2 = new Item(mesh);
-        gameItem2.setScale(0.5f);
-        gameItem2.setPosition(0.5f, 0.5f, -2);
-        Item gameItem3 = new Item(mesh);
-        gameItem3.setScale(0.5f);
-        gameItem3.setPosition(0, 0, -2.5f);
-        Item gameItem4 = new Item(mesh);
-        gameItem4.setScale(0.5f);
-        gameItem4.setPosition(0.5f, 0, -2.5f);
-        gameItems = new Item[]{gameItem1, gameItem2, gameItem3, gameItem4};
+        Mesh mesh = OBJLoader.loadMesh("/models/bunny.obj");
+//        Texture texture = new Texture("/textures/grassblock.png");
+//        mesh.setTexture(texture);
+        Item gameItem = new Item(mesh);
+        gameItem.setScale(0.5f);
+        gameItem.setPosition(0, 0, -2);
+        gameItems = new Item[]{gameItem};
     }
 
     @Override

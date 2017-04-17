@@ -5,6 +5,7 @@ import engine.Item;
 import engine.Utils;
 import engine.Window;
 import engine.graph.Camera;
+import engine.graph.Mesh;
 import engine.graph.ShaderProgram;
 import engine.graph.Transformation;
 import org.joml.Matrix4f;
@@ -41,6 +42,10 @@ public class Renderer {
         shaderProgram.createUniform("modelViewMatrix");
         shaderProgram.createUniform("texture_sampler");
 
+        // Create uniform for default colour and the flag that controls it
+        shaderProgram.createUniform("colour");
+        shaderProgram.createUniform("useColour");
+
         window.setClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     }
 
@@ -68,12 +73,18 @@ public class Renderer {
         shaderProgram.setUniform("texture_sampler", 0);
 
         // Render each gameItem
-        for(Item gameItem : gameItems) {
+        for(Item item : gameItems) {
+            Mesh mesh = item.getMesh();
             // Set model view matrix for this item
-            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
+            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(item, viewMatrix);
             shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
+
             // Render the mes for this game item
-            gameItem.getMesh().render();
+            shaderProgram.setUniform("colour", mesh.getColour());
+            shaderProgram.setUniform("useColour", mesh.isTextured() ? 0 : 1);
+
+            // Render the mes for this game item
+            item.getMesh().render();
         }
 
         shaderProgram.unbind();
