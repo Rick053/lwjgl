@@ -1,4 +1,4 @@
-package engine;
+package com.rickvangemert.engine;
 
 
 public interface GameLogic {

@@ -1,4 +1,4 @@
-package engine;
+package com.rickvangemert.engine;
 
 import org.joml.Vector2d;
 import org.joml.Vector2f;

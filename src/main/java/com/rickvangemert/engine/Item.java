@@ -1,6 +1,6 @@
-package engine;
+package com.rickvangemert.engine;
 
-import engine.graph.Mesh;
+import com.rickvangemert.engine.graph.Mesh;
 import org.joml.Vector3f;
 
 public class Item {

@@ -1,4 +1,4 @@
-package engine;
+package com.rickvangemert.engine;
 
 import static org.lwjgl.glfw.GLFW.*;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -93,7 +93,9 @@ public class Window {
         // Set the clear color
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glEnable(GL_DEPTH_TEST);
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+//        Enable to see the polygon lines of the mesh
+//        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     }
 
     public void setClearColor(float r, float g, float b, float alpha) {

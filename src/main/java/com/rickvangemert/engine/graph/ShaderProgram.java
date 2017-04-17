@@ -1,4 +1,4 @@
-package engine.graph;
+package com.rickvangemert.engine.graph;
 
 import java.nio.FloatBuffer;
 import java.util.HashMap;

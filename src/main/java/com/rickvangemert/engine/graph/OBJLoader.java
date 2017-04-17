@@ -1,8 +1,8 @@
-package engine.graph;
+package com.rickvangemert.engine.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import engine.Utils;
+import com.rickvangemert.engine.Utils;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 

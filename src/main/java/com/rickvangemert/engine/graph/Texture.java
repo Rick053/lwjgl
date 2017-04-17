@@ -1,4 +1,4 @@
-package engine.graph;
+package com.rickvangemert.engine.graph;
 
 
 import de.matthiasmann.twl.utils.PNGDecoder;

@@ -1,13 +1,13 @@
-package game;
+package com.rickvangemert.game;
 
 
-import engine.Item;
-import engine.Utils;
-import engine.Window;
-import engine.graph.Camera;
-import engine.graph.Mesh;
-import engine.graph.ShaderProgram;
-import engine.graph.Transformation;
+import com.rickvangemert.engine.Item;
+import com.rickvangemert.engine.Utils;
+import com.rickvangemert.engine.Window;
+import com.rickvangemert.engine.graph.Camera;
+import com.rickvangemert.engine.graph.Mesh;
+import com.rickvangemert.engine.graph.ShaderProgram;
+import com.rickvangemert.engine.graph.Transformation;
 import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL11.*;
 
@@ -79,11 +79,11 @@ public class Renderer {
             Matrix4f modelViewMatrix = transformation.getModelViewMatrix(item, viewMatrix);
             shaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
 
-            // Render the mes for this game item
+            // Render the mes for this com.rickvangemert.game item
             shaderProgram.setUniform("colour", mesh.getColour());
             shaderProgram.setUniform("useColour", mesh.isTextured() ? 0 : 1);
 
-            // Render the mes for this game item
+            // Render the mes for this com.rickvangemert.game item
             item.getMesh().render();
         }
 

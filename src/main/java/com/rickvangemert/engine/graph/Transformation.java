@@ -1,6 +1,6 @@
-package engine.graph;
+package com.rickvangemert.engine.graph;
 
-import engine.Item;
+import com.rickvangemert.engine.Item;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

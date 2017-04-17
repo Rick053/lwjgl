@@ -1,4 +1,4 @@
-package engine;
+package com.rickvangemert.engine;
 
 import java.io.BufferedReader;
 import java.io.InputStream;

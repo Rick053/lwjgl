@@ -1,7 +1,7 @@
-package game;
+package com.rickvangemert.game;
 
-import engine.Engine;
-import engine.GameLogic;
+import com.rickvangemert.engine.Engine;
+import com.rickvangemert.engine.GameLogic;
 
 public class Main {
 
