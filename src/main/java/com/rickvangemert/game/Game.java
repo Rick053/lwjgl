@@ -118,6 +118,10 @@ public class Game implements GameLogic {
         if (mouseInput.isRightButtonPressed()) {
             Vector2f rotVec = mouseInput.getDisplVec();
             camera.moveRotation(rotVec.x * MOUSE_SENSITIVITY, rotVec.y * MOUSE_SENSITIVITY, 0);
+
+
+            //Update compass rotation
+            hud.rotateCompass(camera.getRotation().y);
         }
 
         // Update spot light direction

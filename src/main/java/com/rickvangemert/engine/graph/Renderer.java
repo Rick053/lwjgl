@@ -1,12 +1,10 @@
 package com.rickvangemert.engine.graph;
 
-
 import com.rickvangemert.engine.*;
+import com.rickvangemert.engine.graph.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-
-import javax.rmi.CORBA.Util;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -31,7 +29,7 @@ public class Renderer {
 
     private ShaderProgram hudShaderProgram;
 
-    private float specularPower;
+    private final float specularPower;
 
     public Renderer() {
         transformation = new Transformation();
@@ -50,15 +48,13 @@ public class Renderer {
         sceneShaderProgram.createFragmentShader(Utils.loadResource("/shaders/fragment.fs"));
         sceneShaderProgram.link();
 
-        // Create uniforms for world and projection matrices
+        // Create uniforms for modelView and projection matrices and texture
         sceneShaderProgram.createUniform("projectionMatrix");
         sceneShaderProgram.createUniform("modelViewMatrix");
         sceneShaderProgram.createUniform("texture_sampler");
-
-        //Create uniform for material
+        // Create uniform for material
         sceneShaderProgram.createMaterialUniform("material");
-
-        //Create lighting uniforms
+        // Create lighting related uniforms
         sceneShaderProgram.createUniform("specularPower");
         sceneShaderProgram.createUniform("ambientLight");
         sceneShaderProgram.createPointLightListUniform("pointLights", MAX_POINT_LIGHTS);
@@ -72,15 +68,19 @@ public class Renderer {
         hudShaderProgram.createFragmentShader(Utils.loadResource("/shaders/hud_fragment.fs"));
         hudShaderProgram.link();
 
+        // Create uniforms for Ortographic-model projection matrix and base colour
         hudShaderProgram.createUniform("projModelMatrix");
         hudShaderProgram.createUniform("colour");
+        hudShaderProgram.createUniform("hasTexture");
     }
 
     public void clear() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    public void render(Window window, Camera camera, Item[] gameItems, SceneLight sceneLight, iHud hud) {
+    public void render(Window window, Camera camera, Item[] gameItems,
+                       SceneLight sceneLight, iHud hud) {
+
         clear();
 
         if ( window.isResized() ) {
@@ -93,7 +93,9 @@ public class Renderer {
         renderHud(window, hud);
     }
 
-    private void renderScene(Window window, Camera camera, Item[] gameItems, SceneLight sceneLight) {
+    public void renderScene(Window window, Camera camera, Item[] gameItems,
+                            SceneLight sceneLight) {
+
         sceneShaderProgram.bind();
 
         // Update projection Matrix
@@ -107,36 +109,17 @@ public class Renderer {
 
         sceneShaderProgram.setUniform("texture_sampler", 0);
         // Render each gameItem
-        for(Item item : gameItems) {
-            Mesh mesh = item.getMesh();
+        for (Item gameItem : gameItems) {
+            Mesh mesh = gameItem.getMesh();
             // Set model view matrix for this item
-            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(item, viewMatrix);
+            Matrix4f modelViewMatrix = transformation.getModelViewMatrix(gameItem, viewMatrix);
             sceneShaderProgram.setUniform("modelViewMatrix", modelViewMatrix);
-
-            // Render the mes for this com.rickvangemert.game item
+            // Render the mesh for this game item
             sceneShaderProgram.setUniform("material", mesh.getMaterial());
             mesh.render();
         }
 
         sceneShaderProgram.unbind();
-    }
-
-    private void renderHud(Window window, iHud hud) {
-        hudShaderProgram.bind();
-
-        Matrix4f ortho = transformation.getOrthoProjectionMatrix(0, window.getWidth(), window.getHeight(), 0);
-        for (Item gameItem : hud.getItems()) {
-            Mesh mesh = gameItem.getMesh();
-            // Set ortohtaphic and model matrix for this HUD item
-            Matrix4f projModelMatrix = transformation.getOrtoProjModelMatrix(gameItem, ortho);
-            hudShaderProgram.setUniform("projModelMatrix", projModelMatrix);
-            hudShaderProgram.setUniform("colour", gameItem.getMesh().getMaterial().getColour());
-
-            // Render the mesh for this HUD item
-            mesh.render();
-        }
-
-        hudShaderProgram.unbind();
     }
 
     private void renderLights(Matrix4f viewMatrix, SceneLight sceneLight) {
@@ -168,8 +151,8 @@ public class Renderer {
             Vector4f dir = new Vector4f(currSpotLight.getConeDirection(), 0);
             dir.mul(viewMatrix);
             currSpotLight.setConeDirection(new Vector3f(dir.x, dir.y, dir.z));
-            Vector3f lightPos = currSpotLight.getPointLight().getPosition();
 
+            Vector3f lightPos = currSpotLight.getPointLight().getPosition();
             Vector4f aux = new Vector4f(lightPos, 1);
             aux.mul(viewMatrix);
             lightPos.x = aux.x;
@@ -185,12 +168,33 @@ public class Renderer {
         dir.mul(viewMatrix);
         currDirLight.setDirection(new Vector3f(dir.x, dir.y, dir.z));
         sceneShaderProgram.setUniform("directionalLight", currDirLight);
+    }
 
+    private void renderHud(Window window, iHud hud) {
+        hudShaderProgram.bind();
+
+        Matrix4f ortho = transformation.getOrthoProjectionMatrix(0, window.getWidth(), window.getHeight(), 0);
+        for (Item gameItem : hud.getItems()) {
+            Mesh mesh = gameItem.getMesh();
+            // Set ortohtaphic and model matrix for this HUD item
+            Matrix4f projModelMatrix = transformation.getOrtoProjModelMatrix(gameItem, ortho);
+            hudShaderProgram.setUniform("projModelMatrix", projModelMatrix);
+            hudShaderProgram.setUniform("colour", gameItem.getMesh().getMaterial().getAmbientColour());
+            hudShaderProgram.setUniform("hasTexture", gameItem.getMesh().getMaterial().isTextured() ? 1 : 0);
+
+            // Render the mesh for this HUD item
+            mesh.render();
+        }
+
+        hudShaderProgram.unbind();
     }
 
     public void cleanup() {
         if (sceneShaderProgram != null) {
             sceneShaderProgram.cleanup();
+        }
+        if (hudShaderProgram != null) {
+            hudShaderProgram.cleanup();
         }
     }
 }
