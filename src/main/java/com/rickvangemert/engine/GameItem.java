@@ -3,7 +3,7 @@ package com.rickvangemert.engine;
 import com.rickvangemert.engine.graph.Mesh;
 import org.joml.Vector3f;
 
-public class Item {
+public class GameItem {
 
     private Mesh mMesh;
 
@@ -13,13 +13,13 @@ public class Item {
 
     private final Vector3f mRotation;
 
-    public Item() {
+    public GameItem() {
         mPosition = new Vector3f(0, 0, 0);
         mScale = 1;
         mRotation = new Vector3f(0, 0, 0);
     }
 
-    public Item(Mesh mesh) {
+    public GameItem(Mesh mesh) {
         this();
         this.mMesh = mesh;
     }

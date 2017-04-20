@@ -1,16 +1,22 @@
 package com.rickvangemert.game;
 
-import com.rickvangemert.engine.Item;
+import com.rickvangemert.engine.GameItem;
 import com.rickvangemert.engine.TextItem;
 import com.rickvangemert.engine.Window;
+import com.rickvangemert.engine.graph.FontTexture;
 import com.rickvangemert.engine.graph.Material;
 import com.rickvangemert.engine.graph.Mesh;
 import com.rickvangemert.engine.graph.OBJLoader;
 import com.rickvangemert.engine.iHud;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+import java.awt.*;
+
 public class Hud implements iHud {
+
+    private static final Font FONT = new Font("Arial", Font.PLAIN, 20);
+
+    private static final String CHARSET = "ISO-8859-1";
 
     private static final int FONT_COLS = 16;
 
@@ -18,13 +24,14 @@ public class Hud implements iHud {
 
     private static final String FONT_TEXTURE = "/textures/font_texture.png";
 
-    private final Item[] gameItems;
+    private final GameItem[] gameItems;
 
     private final TextItem statusTextItem;
-    private final Item compassItem;
+    private final GameItem compassItem;
 
     public Hud(String statusText) throws Exception {
-        this.statusTextItem = new TextItem(statusText, FONT_TEXTURE, FONT_COLS, FONT_ROWS);
+        FontTexture fontTexture = new FontTexture(FONT, CHARSET);
+        this.statusTextItem = new TextItem(statusText, fontTexture);
         this.statusTextItem.getMesh().getMaterial().setAmbientColour(new Vector4f(1, 1, 1, 1));
 
         Mesh compassMesh = OBJLoader.loadMesh("/models/compass.obj");
@@ -32,11 +39,11 @@ public class Hud implements iHud {
         material.setAmbientColour(new Vector4f(1, 0, 0, 1));
         compassMesh.setMaterial(material);
 
-        compassItem = new Item(compassMesh);
+        compassItem = new GameItem(compassMesh);
         compassItem.setScale(40.0f);
         compassItem.setRotation(0f, 0f, 180f);
 
-        gameItems = new Item[]{statusTextItem, compassItem};
+        gameItems = new GameItem[]{statusTextItem, compassItem};
     }
 
     public void setStatusText(String statusText) {
@@ -48,7 +55,7 @@ public class Hud implements iHud {
     }
 
     @Override
-    public Item[] getItems() {
+    public GameItem[] getItems() {
         return gameItems;
     }
 

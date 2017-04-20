@@ -2,11 +2,11 @@ package com.rickvangemert.engine;
 
 public interface iHud {
 
-    Item[] getItems();
+    GameItem[] getItems();
 
     default void cleanup() {
-        Item[] items = getItems();
-        for (Item i : items) {
+        GameItem[] items = getItems();
+        for (GameItem i : items) {
             i.getMesh().cleanUp();
         }
     }
