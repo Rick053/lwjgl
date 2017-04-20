@@ -30,6 +30,7 @@ public class Hud implements iHud {
         Mesh compassMesh = OBJLoader.loadMesh("/models/compass.obj");
         Material material = new Material();
         material.setAmbientColour(new Vector4f(1, 0, 0, 1));
+        compassMesh.setMaterial(material);
 
         compassItem = new Item(compassMesh);
         compassItem.setScale(40.0f);
@@ -53,6 +54,7 @@ public class Hud implements iHud {
 
     public void updateSize(Window window) {
         this.statusTextItem.setPosition(10f, window.getHeight() - 50f, 0);
+        this.compassItem.setPosition(window.getWidth() - 40f, 50f, 0);
     }
 
 }
