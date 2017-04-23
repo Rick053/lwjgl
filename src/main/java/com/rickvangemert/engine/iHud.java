@@ -1,5 +1,7 @@
 package com.rickvangemert.engine;
 
+import com.rickvangemert.engine.graph.items.GameItem;
+
 public interface iHud {
 
     GameItem[] getItems();

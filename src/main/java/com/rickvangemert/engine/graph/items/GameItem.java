@@ -1,4 +1,4 @@
-package com.rickvangemert.engine;
+package com.rickvangemert.engine.graph.items;
 
 import com.rickvangemert.engine.graph.Mesh;
 import org.joml.Vector3f;

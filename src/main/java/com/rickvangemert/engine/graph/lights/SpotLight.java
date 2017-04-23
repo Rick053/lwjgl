@@ -1,4 +1,4 @@
-package com.rickvangemert.engine.graph;
+package com.rickvangemert.engine.graph.lights;
 
 import org.joml.Vector3f;
 

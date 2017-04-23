@@ -1,8 +1,11 @@
 package com.rickvangemert.engine.graph;
 
 import com.rickvangemert.engine.*;
-import com.rickvangemert.engine.graph.*;
-import com.sun.nio.zipfs.ZipFileAttributes;
+import com.rickvangemert.engine.graph.items.GameItem;
+import com.rickvangemert.engine.graph.items.SkyBox;
+import com.rickvangemert.engine.graph.lights.DirectionalLight;
+import com.rickvangemert.engine.graph.lights.PointLight;
+import com.rickvangemert.engine.graph.lights.SpotLight;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;

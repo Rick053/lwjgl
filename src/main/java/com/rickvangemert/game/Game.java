@@ -2,6 +2,10 @@ package com.rickvangemert.game;
 
 import com.rickvangemert.engine.*;
 import com.rickvangemert.engine.graph.*;
+import com.rickvangemert.engine.graph.items.GameItem;
+import com.rickvangemert.engine.graph.items.SkyBox;
+import com.rickvangemert.engine.graph.items.Terrain;
+import com.rickvangemert.engine.graph.lights.DirectionalLight;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -45,42 +49,14 @@ public class Game implements GameLogic {
 
         scene = new Scene();
 
-        // Setup  GameItems
-        float reflectance = 1f;
-        Mesh mesh = OBJLoader.loadMesh("/models/cube.obj");
-        Texture texture = new Texture("/textures/grassblock.png");
-        Material material = new Material(texture, reflectance);
-        mesh.setMaterial(material);
-
-        float blockScale = 0.5f;
         float skyBoxScale = 50.0f;
-        float extension = 2.0f;
-
-        float startx = extension * (-skyBoxScale + blockScale);
-        float startz = extension * (skyBoxScale - blockScale);
-        float starty = -1.0f;
-        float inc = blockScale * 2;
-
-        float posx = startx;
-        float posz = startz;
-        float incy = 0.0f;
-        int NUM_ROWS = (int)(extension * skyBoxScale * 2 / inc);
-        int NUM_COLS = (int)(extension * skyBoxScale * 2/ inc);
-        GameItem[] gameItems  = new GameItem[NUM_ROWS * NUM_COLS];
-        for(int i=0; i<NUM_ROWS; i++) {
-            for(int j=0; j<NUM_COLS; j++) {
-                GameItem gameItem = new GameItem(mesh);
-                gameItem.setScale(blockScale);
-                incy = Math.random() > 0.9f ? blockScale * 2 : 0f;
-                gameItem.setPosition(posx, starty + incy, posz);
-                gameItems[i*NUM_COLS + j] = gameItem;
-
-                posx += inc;
-            }
-            posx = startx;
-            posz -= inc;
-        }
-        scene.setGameItems(gameItems);
+        float terrainScale = 10;
+        int terrainSize = 3;
+        float minY = -0.1f;
+        float maxY = 0.1f;
+        int textInc = 40;
+        Terrain terrain = new Terrain(terrainSize, terrainScale, minY, maxY, "/textures/heightmap.png", "/textures/terrain.png", textInc);
+        scene.setGameItems(terrain.getGameItems());
 
         // Setup  SkyBox
         SkyBox skyBox = new SkyBox("/models/skybox.obj", "/textures/skybox.png");
@@ -93,9 +69,10 @@ public class Game implements GameLogic {
         // Create HUD
         hud = new Hud("DEMO");
 
-        camera.getPosition().x = 0.65f;
-        camera.getPosition().y = 1.15f;
-        camera.getPosition().y = 4.34f;
+        camera.getPosition().x = 0.0f;
+        camera.getPosition().z = 0.0f;
+        camera.getPosition().y = -0.2f;
+        camera.getRotation().x = 10.f;
     }
 
     private void setupLights() {
@@ -106,7 +83,7 @@ public class Game implements GameLogic {
         sceneLight.setAmbientLight(new Vector3f(1.0f, 1.0f, 1.0f));
 
         // Directional Light
-        float lightIntensity = 1.0f;
+        float lightIntensity = 0.6f;
         Vector3f lightPosition = new Vector3f(-1, 0, 0);
         sceneLight.setDirectionalLight(new DirectionalLight(new Vector3f(1, 1, 1), lightPosition, lightIntensity));
     }
@@ -115,19 +92,19 @@ public class Game implements GameLogic {
     public void input(Window window, MouseInput mouseInput) {
         cameraInc.set(0, 0, 0);
         if (window.isKeyPressed(GLFW_KEY_W)) {
-            cameraInc.z = -2;
+            cameraInc.z = -3;
         } else if (window.isKeyPressed(GLFW_KEY_S)) {
-            cameraInc.z = 2;
+            cameraInc.z = 3;
         }
         if (window.isKeyPressed(GLFW_KEY_A)) {
-            cameraInc.x = -2;
+            cameraInc.x = -3;
         } else if (window.isKeyPressed(GLFW_KEY_D)) {
-            cameraInc.x = 2;
+            cameraInc.x = 3;
         }
         if (window.isKeyPressed(GLFW_KEY_Z)) {
-            cameraInc.y = -2;
+            cameraInc.y = -4;
         } else if (window.isKeyPressed(GLFW_KEY_X)) {
-            cameraInc.y = 2;
+            cameraInc.y = 4;
         }
     }
 
@@ -149,10 +126,10 @@ public class Game implements GameLogic {
 
         // Update directional light direction, intensity and colour
         DirectionalLight directionalLight = sceneLight.getDirectionalLight();
-        lightAngle += 1.1f;
+        lightAngle += 0.7f;
         if (lightAngle > 90) {
             directionalLight.setIntensity(0);
-            if (lightAngle >= 360) {
+            if (lightAngle >= 100) {
                 lightAngle = -90;
             }
             sceneLight.getAmbientLight().set(0.3f, 0.3f, 0.4f);

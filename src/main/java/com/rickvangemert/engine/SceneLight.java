@@ -1,8 +1,8 @@
 package com.rickvangemert.engine;
 
-import com.rickvangemert.engine.graph.DirectionalLight;
-import com.rickvangemert.engine.graph.PointLight;
-import com.rickvangemert.engine.graph.SpotLight;
+import com.rickvangemert.engine.graph.lights.DirectionalLight;
+import com.rickvangemert.engine.graph.lights.PointLight;
+import com.rickvangemert.engine.graph.lights.SpotLight;
 import org.joml.Vector3f;
 
 public class SceneLight {

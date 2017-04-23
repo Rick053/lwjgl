@@ -1,6 +1,6 @@
 package com.rickvangemert.engine.graph;
 
-import com.rickvangemert.engine.GameItem;
+import com.rickvangemert.engine.graph.items.GameItem;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

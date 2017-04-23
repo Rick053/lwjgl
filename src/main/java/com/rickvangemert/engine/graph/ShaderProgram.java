@@ -3,6 +3,10 @@ package com.rickvangemert.engine.graph;
 import java.nio.FloatBuffer;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.rickvangemert.engine.graph.lights.DirectionalLight;
+import com.rickvangemert.engine.graph.lights.PointLight;
+import com.rickvangemert.engine.graph.lights.SpotLight;
 import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL20.*;
 

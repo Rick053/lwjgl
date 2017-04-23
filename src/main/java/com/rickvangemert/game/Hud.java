@@ -1,7 +1,7 @@
 package com.rickvangemert.game;
 
-import com.rickvangemert.engine.GameItem;
-import com.rickvangemert.engine.TextItem;
+import com.rickvangemert.engine.graph.items.GameItem;
+import com.rickvangemert.engine.graph.items.TextItem;
 import com.rickvangemert.engine.Window;
 import com.rickvangemert.engine.graph.FontTexture;
 import com.rickvangemert.engine.graph.Material;

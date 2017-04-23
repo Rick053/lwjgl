@@ -1,5 +1,6 @@
-package com.rickvangemert.engine;
+package com.rickvangemert.engine.graph.items;
 
+import com.rickvangemert.engine.Utils;
 import com.rickvangemert.engine.graph.FontTexture;
 import com.rickvangemert.engine.graph.Material;
 import com.rickvangemert.engine.graph.Mesh;

@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
-import com.rickvangemert.engine.GameItem;
+import com.rickvangemert.engine.graph.items.GameItem;
 import org.lwjgl.system.MemoryUtil;
 
 public class Mesh {

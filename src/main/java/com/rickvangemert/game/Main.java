@@ -6,6 +6,8 @@ import com.rickvangemert.engine.GameLogic;
 public class Main {
 
     public static void main(String[] args) {
+        System.setProperty("javafx.macosx.embedded", "true");
+//        java.awt.Toolkit.getDefaultToolkit();
         System.setProperty("java.awt.headless", "true");
 
         try {
