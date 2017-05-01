@@ -7,6 +7,7 @@ import java.util.Map;
 import com.rickvangemert.engine.graph.lights.DirectionalLight;
 import com.rickvangemert.engine.graph.lights.PointLight;
 import com.rickvangemert.engine.graph.lights.SpotLight;
+import com.rickvangemert.engine.graph.weather.Fog;
 import org.joml.Matrix4f;
 import static org.lwjgl.opengl.GL20.*;
 
@@ -79,6 +80,12 @@ public class ShaderProgram {
         for (int i = 0; i < size; i++) {
             createSpotLightUniform(uniformName + "[" + i + "]");
         }
+    }
+
+    public void createFogUniform(String uniformName) throws Exception {
+        createUniform(uniformName + ".activeFog");
+        createUniform(uniformName + ".colour");
+        createUniform(uniformName + ".density");
     }
 
     public void setUniform(String uniformName, Matrix4f value) {
@@ -156,6 +163,12 @@ public class ShaderProgram {
         setUniform(uniformName + ".colour", light.getColor());
         setUniform(uniformName + ".direction", light.getDirection());
         setUniform(uniformName + ".intensity", light.getIntensity());
+    }
+
+    public void setUniform(String uniformName, Fog fog) {
+        setUniform(uniformName + ".activeFog", fog.isActive() ? 1 : 0);
+        setUniform(uniformName + ".colour", fog.getColour());
+        setUniform(uniformName + ".density", fog.getDensity());
     }
 
     public void createVertexShader(String shaderCode) throws Exception {

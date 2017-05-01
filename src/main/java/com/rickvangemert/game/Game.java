@@ -6,6 +6,7 @@ import com.rickvangemert.engine.graph.items.GameItem;
 import com.rickvangemert.engine.graph.items.SkyBox;
 import com.rickvangemert.engine.graph.items.Terrain;
 import com.rickvangemert.engine.graph.lights.DirectionalLight;
+import com.rickvangemert.engine.graph.weather.Fog;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
@@ -36,6 +37,8 @@ public class Game implements GameLogic {
 
     private Hud hud;
 
+    private Terrain terrain;
+
     public Game() {
         renderer = new Renderer();
         camera = new Camera();
@@ -55,8 +58,10 @@ public class Game implements GameLogic {
         float minY = -0.1f;
         float maxY = 0.1f;
         int textInc = 40;
-        Terrain terrain = new Terrain(terrainSize, terrainScale, minY, maxY, "/textures/heightmap.png", "/textures/terrain.png", textInc);
+        terrain = new Terrain(terrainSize, terrainScale, minY, maxY, "/textures/heightmap.png", "/textures/terrain.png", textInc);
         scene.setGameItems(terrain.getGameItems());
+
+        scene.setFog(new Fog(true, new Vector3f(0.5f, 0.5f, 0.5f), 0.10f));
 
         // Setup  SkyBox
         SkyBox skyBox = new SkyBox("/models/skybox.obj", "/textures/skybox.png");
@@ -71,8 +76,8 @@ public class Game implements GameLogic {
 
         camera.getPosition().x = 0.0f;
         camera.getPosition().z = 0.0f;
-        camera.getPosition().y = -0.2f;
-        camera.getRotation().x = 10.f;
+        camera.getPosition().y = 5.0f;
+        camera.getRotation().x = 90;
     }
 
     private void setupLights() {
@@ -120,16 +125,21 @@ public class Game implements GameLogic {
         }
 
         // Update camera position
+        Vector3f prevPos = new Vector3f(camera.getPosition());
         camera.movePosition(cameraInc.x * CAMERA_POS_STEP, cameraInc.y * CAMERA_POS_STEP, cameraInc.z * CAMERA_POS_STEP);
 
-        SceneLight sceneLight = scene.getSceneLight();
+        float height = terrain.getHeight(camera.getPosition());
+        if (camera.getPosition().y <= height) {
+            camera.setPosition(prevPos.x, prevPos.y, prevPos.z);
+        }
 
+        SceneLight sceneLight = scene.getSceneLight();
         // Update directional light direction, intensity and colour
         DirectionalLight directionalLight = sceneLight.getDirectionalLight();
-        lightAngle += 0.7f;
+        lightAngle += 0.4f;
         if (lightAngle > 90) {
             directionalLight.setIntensity(0);
-            if (lightAngle >= 100) {
+            if (lightAngle >= 360) {
                 lightAngle = -90;
             }
             sceneLight.getAmbientLight().set(0.3f, 0.3f, 0.4f);

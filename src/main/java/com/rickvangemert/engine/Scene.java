@@ -3,6 +3,7 @@ package com.rickvangemert.engine;
 import com.rickvangemert.engine.graph.Mesh;
 import com.rickvangemert.engine.graph.items.GameItem;
 import com.rickvangemert.engine.graph.items.SkyBox;
+import com.rickvangemert.engine.graph.weather.Fog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +20,11 @@ public class Scene {
 
     private SceneLight sceneLight;
 
+    private Fog fog;
+
     public Scene() {
         meshMap = new HashMap<>();
+        fog = Fog.NOFOG;
     }
 
     public Map<Mesh, List<GameItem>> getGameMeshes() {
@@ -55,5 +59,13 @@ public class Scene {
 
     public void setSceneLight(SceneLight sceneLight) {
         this.sceneLight = sceneLight;
+    }
+
+    public Fog getFog() {
+        return fog;
+    }
+
+    public void setFog(Fog fog) {
+        this.fog = fog;
     }
 }

@@ -83,6 +83,7 @@ public class Renderer {
         sceneShaderProgram.createPointLightListUniform("pointLights", MAX_POINT_LIGHTS);
         sceneShaderProgram.createSpotLightListUniform("spotLights", MAX_SPOT_LIGHTS);
         sceneShaderProgram.createDirectionalLightUniform("directionalLight");
+        sceneShaderProgram.createFogUniform("fog");
     }
 
     private void setupHudShader() throws Exception {
@@ -115,7 +116,7 @@ public class Renderer {
 
         renderScene(window, camera, scene);
 
-        renderSkyBox(window, camera, scene);
+//        renderSkyBox(window, camera, scene);
 
         renderHud(window, hud);
     }
@@ -146,6 +147,8 @@ public class Renderer {
 
         Matrix4f projectionMatrix = transformation.getProjectionMatrix();
         sceneShaderProgram.setUniform("projectionMatrix", projectionMatrix);
+
+        sceneShaderProgram.setUniform("fog", scene.getFog());
 
         Matrix4f viewMatrix = transformation.getViewMatrix();
 
